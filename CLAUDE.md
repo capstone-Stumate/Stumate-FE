@@ -14,6 +14,36 @@ AI agent를 위한 Stumate FE 프로젝트 가이드입니다.
 
 ---
 
+## 주요 명령어
+
+```bash
+pnpm dev        # 개발 서버 실행
+pnpm build      # 프로덕션 빌드
+pnpm lint       # ESLint 실행
+pnpm preview    # 빌드 결과 미리보기
+```
+
+---
+
+## 🚨 절대 금지 사항
+
+> **IMPORTANT: 다음 조작은 어떠한 경우에도 절대 실행하지 않는다**
+
+```bash
+git push --force          # 강제 푸시 금지
+git reset --hard          # 하드 리셋 금지
+git commit --no-verify    # 훅 우회 금지
+git push origin main      # main 직접 푸시 금지 (PR 필수)
+pnpm audit fix --force    # 강제 패키지 업데이트 금지
+rm -rf                    # 디렉토리 강제 삭제 금지
+```
+
+- `.env` 파일 내용을 로그·출력·코드에 포함하지 않는다
+- API 키·비밀번호·토큰을 코드에 하드코딩하지 않는다
+- 라이브러리 버전을 임의로 변경하지 않는다
+
+---
+
 ## 폴더 구조
 
 FSD(Feature-Sliced Design) 기반 구조를 사용합니다.
