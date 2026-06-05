@@ -1,14 +1,14 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/shared/constants/routes';
+import { ROUTE_PATH } from '@/shared/constants/path';
 
 import homeSvg from '@/assets/home.svg';
 import timerSvg from '@/assets/timer.svg';
 import profileSvg from '@/assets/profile.svg';
 
 const NAV_ITEMS = [
-  { label: '홈', icon: homeSvg, path: ROUTES.HOME },
-  { label: '타이머', icon: timerSvg, path: ROUTES.TIMER },
-  { label: '내 정보', icon: profileSvg, path: ROUTES.MYPAGE },
+  { label: '홈', icon: homeSvg, path: ROUTE_PATH.HOME },
+  { label: '타이머', icon: timerSvg, path: ROUTE_PATH.TIMER },
+  { label: '내 정보', icon: profileSvg, path: ROUTE_PATH.MYPAGE },
 ];
 
 const BottomNav = () => {

@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import SignupForm from './components/SignupForm';
-import { ROUTES } from '@/shared/constants/routes';
+import { ROUTE_PATH } from '@/shared/constants/path';
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -13,7 +13,7 @@ const SignupPage = () => {
         이미 계정이 있나요?{' '}
         <button
           type="button"
-          onClick={() => navigate(ROUTES.LOGIN)}
+          onClick={() => navigate(ROUTE_PATH.LOGIN)}
           className="text-primary underline"
         >
           로그인
