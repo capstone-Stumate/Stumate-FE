@@ -18,14 +18,14 @@ const Input = ({
   return (
     <div className={`flex flex-col gap-1 ${className}`}>
       {label && (
-        <label className="text-body font-sans text-text-gray">{label}</label>
+        <label className="text-body text-text-gray font-sans">{label}</label>
       )}
       <input
         type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="border-b border-border bg-transparent py-2 text-body font-sans text-text outline-none placeholder:text-text-gray focus:border-primary transition-colors duration-200"
+        className="bg-bg text-body text-text placeholder:text-text-gray focus:outline-primary h-11 w-full rounded-lg px-4 font-sans transition-all duration-200 outline-none focus:outline-1"
       />
     </div>
   );

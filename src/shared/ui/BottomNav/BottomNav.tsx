@@ -1,14 +1,14 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ROUTES } from '@/shared/constants/routes';
+import { ROUTE_PATH } from '@/shared/constants/path';
 
 import homeSvg from '@/assets/home.svg';
 import timerSvg from '@/assets/timer.svg';
 import profileSvg from '@/assets/profile.svg';
 
 const NAV_ITEMS = [
-  { label: '홈', icon: homeSvg, path: ROUTES.HOME },
-  { label: '타이머', icon: timerSvg, path: ROUTES.TIMER },
-  { label: '내 정보', icon: profileSvg, path: ROUTES.MYPAGE },
+  { label: '홈', icon: homeSvg, path: ROUTE_PATH.HOME },
+  { label: '타이머', icon: timerSvg, path: ROUTE_PATH.TIMER },
+  { label: '내 정보', icon: profileSvg, path: ROUTE_PATH.MYPAGE },
 ];
 
 const BottomNav = () => {
@@ -16,7 +16,7 @@ const BottomNav = () => {
   const { pathname } = useLocation();
 
   return (
-    <nav className="flex w-full items-center justify-around border-t border-border bg-white py-3">
+    <nav className="fixed bottom-0 left-1/2 flex w-full max-w-[430px] -translate-x-1/2 items-center justify-around border-t border-border bg-white py-3">
       {NAV_ITEMS.map(({ label, icon, path }) => {
         const isActive = pathname === path;
         return (
