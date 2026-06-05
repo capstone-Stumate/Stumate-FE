@@ -210,7 +210,6 @@ const hasEmail = (email: string): boolean => { ... };
 // 색상 토큰 사용 예시
 <div className="bg-primary text-text">
 <p className="text-text-gray text-body font-sans">
-<h1 className="font-brand text-header1">
 ```
 
 ### 색상 토큰
