@@ -30,7 +30,7 @@ const DateAccordion = ({
         type="button"
         disabled={isDisabled}
         onClick={onToggle}
-        className={`flex w-full items-center justify-between px-4 py-3 transition-colors ${
+        className={`flex w-full items-center justify-between px-4 py-3 ${
           isOpen
             ? 'bg-primary-light'
             : isDisabled
