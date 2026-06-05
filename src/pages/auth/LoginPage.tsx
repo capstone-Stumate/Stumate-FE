@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
-import { ROUTE_PATH } from '@/shared/constants/path';
+import { ROUTE_PATH } from '@/app/router/path';
 import logo from '@/assets/logo.svg';
 
 const LoginPage = () => {
@@ -10,7 +10,7 @@ const LoginPage = () => {
     <main className="flex min-h-screen w-full flex-col justify-center">
       <div className="mb-8 flex flex-col items-center gap-2">
         <img src={logo} alt="Stumate" className="h-6" />
-        <h1 className="text-header2 font-sans text-text">로그인</h1>
+        <h1 className="text-header2 text-text font-sans">로그인</h1>
       </div>
       <LoginForm />
       <div className="mt-6 flex flex-col items-center gap-1">
@@ -18,7 +18,7 @@ const LoginPage = () => {
         <button
           type="button"
           onClick={() => navigate(ROUTE_PATH.SIGNUP)}
-          className="text-body font-bold text-primary underline"
+          className="text-body text-primary font-bold underline"
         >
           회원가입하기
         </button>
