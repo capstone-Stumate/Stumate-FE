@@ -15,16 +15,16 @@ const SignupPage = () => {
         </h1>
       </div>
       <SignupForm />
-      <p className="text-body text-text-gray mt-6 text-center">
-        이미 계정이 있나요?
+      <div className="mt-6 flex flex-col items-center gap-1">
+        <p className="text-body text-text-gray">이미 계정이 있나요?</p>
         <button
           type="button"
           onClick={() => navigate(ROUTE_PATH.LOGIN)}
-          className="text-primary underline"
+          className="text-body text-primary font-bold underline"
         >
           로그인하기
         </button>
-      </p>
+      </div>
     </main>
   );
 };
