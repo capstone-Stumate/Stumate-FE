@@ -50,14 +50,6 @@ const router = createBrowserRouter([
             },
           },
           {
-            path: ROUTE_PATH.CENTER,
-            lazy: async () => {
-              const { default: Component } =
-                await import('@/pages/center/CenterPage');
-              return { Component };
-            },
-          },
-          {
             path: ROUTE_PATH.MYPAGE,
             lazy: async () => {
               const { default: Component } =

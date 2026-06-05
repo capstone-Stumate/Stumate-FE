@@ -1,10 +1,9 @@
 export const ROUTE_PATH = {
   LOGIN: '/login',
-  SIGNUP: '/signup',
+  SIGNUP: '/',
   ONBOARDING: '/onboarding',
-  TIMER: '/',
+  TIMER: '/timer',
   PLANNER: '/planner',
-  CENTER: '/center',
   MYPAGE: '/mypage',
   TODOLIST: '/todolist',
 } as const;
