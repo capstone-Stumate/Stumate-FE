@@ -1,42 +1,67 @@
-import { lazy, Suspense } from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Suspense } from 'react-router-dom';
 import MainLayout from '@/app/layouts/MainLayout';
 import { ROUTE_PATH } from '@/shared/constants/path';
-
-const LoginPage = lazy(() => import('@/pages/auth/LoginPage'));
-const SignupPage = lazy(() => import('@/pages/auth/SignupPage'));
-const OnboardingPage = lazy(() => import('@/pages/onboarding/OnboardingPage'));
-const HomePage = lazy(() => import('@/pages/home/HomePage'));
-const TimerPage = lazy(() => import('@/pages/timer/TimerPage'));
-const CenterPage = lazy(() => import('@/pages/center/CenterPage'));
-const MyPage = lazy(() => import('@/pages/mypage/MyPage'));
-const TodolistPage = lazy(() => import('@/pages/todolist/TodolistPage'));
-
-const withSuspense = (element: React.ReactNode) => (
-  <Suspense fallback={null}>{element}</Suspense>
-);
 
 const router = createBrowserRouter([
   {
     path: ROUTE_PATH.LOGIN,
-    element: withSuspense(<LoginPage />),
+    lazy: async () => {
+      const { default: Component } = await import('@/pages/auth/LoginPage');
+      return { Component };
+    },
   },
   {
     path: ROUTE_PATH.SIGNUP,
-    element: withSuspense(<SignupPage />),
+    lazy: async () => {
+      const { default: Component } = await import('@/pages/auth/SignupPage');
+      return { Component };
+    },
   },
   {
     path: ROUTE_PATH.ONBOARDING,
-    element: withSuspense(<OnboardingPage />),
+    lazy: async () => {
+      const { default: Component } = await import('@/pages/onboarding/OnboardingPage');
+      return { Component };
+    },
   },
   {
     element: <MainLayout />,
     children: [
-      { path: ROUTE_PATH.HOME, element: withSuspense(<HomePage />) },
-      { path: ROUTE_PATH.TIMER, element: withSuspense(<TimerPage />) },
-      { path: ROUTE_PATH.CENTER, element: withSuspense(<CenterPage />) },
-      { path: ROUTE_PATH.MYPAGE, element: withSuspense(<MyPage />) },
-      { path: ROUTE_PATH.TODOLIST, element: withSuspense(<TodolistPage />) },
+      {
+        path: ROUTE_PATH.HOME,
+        lazy: async () => {
+          const { default: Component } = await import('@/pages/home/HomePage');
+          return { Component };
+        },
+      },
+      {
+        path: ROUTE_PATH.TIMER,
+        lazy: async () => {
+          const { default: Component } = await import('@/pages/timer/TimerPage');
+          return { Component };
+        },
+      },
+      {
+        path: ROUTE_PATH.CENTER,
+        lazy: async () => {
+          const { default: Component } = await import('@/pages/center/CenterPage');
+          return { Component };
+        },
+      },
+      {
+        path: ROUTE_PATH.MYPAGE,
+        lazy: async () => {
+          const { default: Component } = await import('@/pages/mypage/MyPage');
+          return { Component };
+        },
+      },
+      {
+        path: ROUTE_PATH.TODOLIST,
+        lazy: async () => {
+          const { default: Component } = await import('@/pages/todolist/TodolistPage');
+          return { Component };
+        },
+      },
     ],
   },
 ]);
