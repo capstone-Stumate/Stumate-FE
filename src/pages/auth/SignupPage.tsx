@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import SignupForm from './components/SignupForm';
-import { ROUTE_PATH } from '@/shared/constants/path';
+import { ROUTE_PATH } from '@/app/router/path';
 import logo from '@/assets/logo.svg';
 
 const SignupPage = () => {

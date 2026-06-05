@@ -1,14 +1,32 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ROUTE_PATH } from '@/shared/constants/path';
+import { ROUTE_PATH } from '@/app/router/path';
 
-import homeSvg from '@/assets/home.svg';
-import timerSvg from '@/assets/timer.svg';
-import profileSvg from '@/assets/profile.svg';
+import plannerActive from '@/assets/planner-active.svg';
+import plannerDefault from '@/assets/planner-default.svg';
+import timerActive from '@/assets/timer-active.svg';
+import timerDefault from '@/assets/timer-default.svg';
+import profileActive from '@/assets/profile-active.svg';
+import profileDefault from '@/assets/profile-default.svg';
 
 const NAV_ITEMS = [
-  { label: '홈', icon: homeSvg, path: ROUTE_PATH.HOME },
-  { label: '타이머', icon: timerSvg, path: ROUTE_PATH.TIMER },
-  { label: '내 정보', icon: profileSvg, path: ROUTE_PATH.MYPAGE },
+  {
+    label: '플래너',
+    activeIcon: plannerActive,
+    defaultIcon: plannerDefault,
+    path: ROUTE_PATH.PLANNER,
+  },
+  {
+    label: '타이머',
+    activeIcon: timerActive,
+    defaultIcon: timerDefault,
+    path: ROUTE_PATH.TIMER,
+  },
+  {
+    label: '내 정보',
+    activeIcon: profileActive,
+    defaultIcon: profileDefault,
+    path: ROUTE_PATH.MYPAGE,
+  },
 ];
 
 const BottomNav = () => {
@@ -16,8 +34,8 @@ const BottomNav = () => {
   const { pathname } = useLocation();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 flex w-full max-w-[430px] -translate-x-1/2 items-center justify-around border-t border-border bg-white py-3">
-      {NAV_ITEMS.map(({ label, icon, path }) => {
+    <nav className="border-border fixed bottom-0 left-1/2 flex w-full max-w-[430px] -translate-x-1/2 items-center justify-around border-t bg-white py-3">
+      {NAV_ITEMS.map(({ label, activeIcon, defaultIcon, path }) => {
         const isActive = pathname === path;
         return (
           <button
@@ -27,12 +45,12 @@ const BottomNav = () => {
             className="flex flex-col items-center gap-1"
           >
             <img
-              src={icon}
+              src={isActive ? activeIcon : defaultIcon}
               alt={label}
-              className={`h-6 w-6 ${isActive ? 'opacity-100' : 'opacity-40'}`}
+              className="h-6 w-6"
             />
             <span
-              className={`text-xs font-sans ${isActive ? 'text-primary font-medium' : 'text-text-gray'}`}
+              className={`font-sans text-xs ${isActive ? 'text-primary font-bold' : 'text-text-gray'}`}
             >
               {label}
             </span>

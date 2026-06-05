@@ -1,7 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 import RootLayout from '@/app/layouts/RootLayout';
 import MainLayout from '@/app/layouts/MainLayout';
-import { ROUTE_PATH } from '@/shared/constants/path';
+import { ROUTE_PATH } from '@/app/router/path';
 
 const router = createBrowserRouter([
   {
@@ -17,14 +17,16 @@ const router = createBrowserRouter([
       {
         path: ROUTE_PATH.SIGNUP,
         lazy: async () => {
-          const { default: Component } = await import('@/pages/auth/SignupPage');
+          const { default: Component } =
+            await import('@/pages/auth/SignupPage');
           return { Component };
         },
       },
       {
         path: ROUTE_PATH.ONBOARDING,
         lazy: async () => {
-          const { default: Component } = await import('@/pages/onboarding/OnboardingPage');
+          const { default: Component } =
+            await import('@/pages/onboarding/OnboardingPage');
           return { Component };
         },
       },
@@ -32,37 +34,42 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
           {
-            path: ROUTE_PATH.HOME,
+            path: ROUTE_PATH.TIMER,
             lazy: async () => {
-              const { default: Component } = await import('@/pages/home/HomePage');
+              const { default: Component } =
+                await import('@/pages/timer/TimerPage');
               return { Component };
             },
           },
           {
-            path: ROUTE_PATH.TIMER,
+            path: ROUTE_PATH.PLANNER,
             lazy: async () => {
-              const { default: Component } = await import('@/pages/timer/TimerPage');
+              const { default: Component } =
+                await import('@/pages/planner/PlannerPage');
               return { Component };
             },
           },
           {
             path: ROUTE_PATH.CENTER,
             lazy: async () => {
-              const { default: Component } = await import('@/pages/center/CenterPage');
+              const { default: Component } =
+                await import('@/pages/center/CenterPage');
               return { Component };
             },
           },
           {
             path: ROUTE_PATH.MYPAGE,
             lazy: async () => {
-              const { default: Component } = await import('@/pages/mypage/MyPage');
+              const { default: Component } =
+                await import('@/pages/mypage/MyPage');
               return { Component };
             },
           },
           {
             path: ROUTE_PATH.TODOLIST,
             lazy: async () => {
-              const { default: Component } = await import('@/pages/todolist/TodolistPage');
+              const { default: Component } =
+                await import('@/pages/todolist/TodolistPage');
               return { Component };
             },
           },
