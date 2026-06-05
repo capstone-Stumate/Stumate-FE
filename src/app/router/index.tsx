@@ -1,4 +1,4 @@
-import { createBrowserRouter, Suspense } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import MainLayout from '@/app/layouts/MainLayout';
 import { ROUTE_PATH } from '@/shared/constants/path';
 
@@ -20,7 +20,8 @@ const router = createBrowserRouter([
   {
     path: ROUTE_PATH.ONBOARDING,
     lazy: async () => {
-      const { default: Component } = await import('@/pages/onboarding/OnboardingPage');
+      const { default: Component } =
+        await import('@/pages/onboarding/OnboardingPage');
       return { Component };
     },
   },
@@ -37,14 +38,16 @@ const router = createBrowserRouter([
       {
         path: ROUTE_PATH.TIMER,
         lazy: async () => {
-          const { default: Component } = await import('@/pages/timer/TimerPage');
+          const { default: Component } =
+            await import('@/pages/timer/TimerPage');
           return { Component };
         },
       },
       {
         path: ROUTE_PATH.CENTER,
         lazy: async () => {
-          const { default: Component } = await import('@/pages/center/CenterPage');
+          const { default: Component } =
+            await import('@/pages/center/CenterPage');
           return { Component };
         },
       },
@@ -58,7 +61,8 @@ const router = createBrowserRouter([
       {
         path: ROUTE_PATH.TODOLIST,
         lazy: async () => {
-          const { default: Component } = await import('@/pages/todolist/TodolistPage');
+          const { default: Component } =
+            await import('@/pages/todolist/TodolistPage');
           return { Component };
         },
       },
