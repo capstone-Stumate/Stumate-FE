@@ -6,6 +6,7 @@ import SubjectSelect from './components/SubjectSelect';
 import ScheduleInput from './components/ScheduleInput';
 import ScheduleList from './components/ScheduleList';
 import Button from '@/shared/ui/Button/Button';
+import logoSmall from '@/assets/logo-small.svg';
 
 const OnboardingPage = () => {
   const navigate = useNavigate();
@@ -31,8 +32,15 @@ const OnboardingPage = () => {
   } = useOnboarding();
 
   return (
-    <main className="flex min-h-screen flex-col py-10">
-      <h1 className="text-header2 text-text mb-8 font-sans">학습 정보 입력</h1>
+    <>
+      <header className="pt-10">
+        <img src={logoSmall} alt="Stumate" />
+        <div className="relative flex items-center justify-center py-4">
+          <h1 className="text-header2 text-text font-sans font-bold">
+            내 정보
+          </h1>
+        </div>
+      </header>
       <div className="flex flex-col gap-5">
         <PlanLevel value={difficulty} onChange={setDifficulty} />
         <SubjectSelect
@@ -58,7 +66,7 @@ const OnboardingPage = () => {
       <div className="mt-auto pt-8">
         <Button label="완료" onClick={() => navigate(ROUTE_PATH.TIMER)} />
       </div>
-    </main>
+    </>
   );
 };
 

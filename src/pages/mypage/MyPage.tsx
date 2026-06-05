@@ -37,13 +37,15 @@ const MyPage = () => {
       <header className="pt-10">
         <img src={logoSmall} alt="Stumate" />
         <div className="relative flex items-center justify-center py-4">
-          <h1 className="text-body text-text font-sans font-bold">내 정보</h1>
+          <h1 className="text-header2 text-text font-sans font-bold">
+            내 정보
+          </h1>
         </div>
       </header>
 
       <div className="flex flex-col gap-4">
         <section className="flex flex-col gap-1">
-          <span className="text-header2 text-text font-sans font-bold">
+          <span className="text-text font-sans text-[17px] font-bold">
             {user.name}
           </span>
           <span className="text-body text-text-gray font-sans">
