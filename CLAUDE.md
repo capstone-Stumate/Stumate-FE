@@ -47,6 +47,7 @@ rm -rf                    # 디렉토리 강제 삭제 금지
 - ✅ **항상**: TypeScript 에러 및 lint 통과 확인 후 완료 보고
 - ⚠️ **먼저 물어보기**: 새 라이브러리 추가, 폴더 구조 변경
 - 🚫 **절대 금지**: `node_modules` 수정
+- 🚫 **절대 금지**: 사용자가 직접 수정한 파일을 `Write`로 전체 덮어쓰기 — 반드시 `Edit`으로 필요한 부분만 수정
 
 ---
 
@@ -62,6 +63,8 @@ src/
 │   ├── App.tsx
 │   └── main.tsx
 │
+├── assets/                     # SVG 아이콘 등 정적 자원
+│
 ├── pages/                      # 페이지 단위 도메인
 │   └── {페이지명}/
 │       ├── api/                # 해당 페이지 전용 API
@@ -72,11 +75,19 @@ src/
 └── shared/                     # 공통 자원
     ├── api/                    # axios 인스턴스, endpoints
     ├── ui/                     # 공통 UI 컴포넌트
-    ├── hooks/                  # 공통 훅
-    ├── types/                  # 전역 타입
-    ├── utils/                  # 공통 유틸 함수
-    ├── styles/                 # 전역 스타일
-    └── constants/              # 공통 상수
+    │   ├── BottomNav/
+    │   ├── Button/
+    │   ├── Input/
+    │   ├── Modal/
+    │   ├── StarRating/
+    │   ├── Tag/                # Tag, SubjectTag, DayChip
+    │   ├── TimeRangePicker/
+    │   └── TodoItem/
+    ├── hooks/                  # 공통 훅 (useModal, useToast)
+    ├── types/                  # 전역 타입 (ai, auth, schedule, timer, todo, user)
+    ├── utils/                  # 공통 유틸 함수 (formatDate, formatTime)
+    ├── styles/                 # 전역 스타일 (global.css)
+    └── constants/              # 공통 상수 (level, locations, subjects)
 ```
 
 ### 페이지 목록
@@ -85,9 +96,8 @@ src/
 |------|------|
 | `pages/auth/` | 회원가입, 로그인 |
 | `pages/onboarding/` | 학습 정보 입력 |
-| `pages/home/` | 홈 (타이머 대기) |
+| `pages/planner/` | 플래너 - 통계 |
 | `pages/timer/` | 타이머 (조건부 렌더링으로 상태 관리) |
-| `pages/center/` | 센터 (학습 통계) |
 | `pages/mypage/` | 내 정보 |
 | `pages/todolist/` | 투두리스트 |
 
@@ -141,7 +151,7 @@ const TimerPage = () => {
   return (
     <>
       <h1>타이머</h1>
-      <TimerIdle />
+      <Timer />
     </>
   );
 };

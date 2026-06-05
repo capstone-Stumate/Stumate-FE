@@ -34,7 +34,7 @@ const BottomNav = () => {
   const { pathname } = useLocation();
 
   return (
-    <nav className="border-border fixed bottom-0 left-1/2 flex w-full max-w-[430px] -translate-x-1/2 items-center justify-around border-t bg-white py-3">
+    <nav className="border-border fixed bottom-0 left-1/2 flex w-full max-w-107.5 -translate-x-1/2 justify-around border-t bg-white py-3">
       {NAV_ITEMS.map(({ label, activeIcon, defaultIcon, path }) => {
         const isActive = pathname === path;
         return (
