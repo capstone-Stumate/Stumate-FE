@@ -147,6 +147,8 @@ export default TimerPage;
 
 - 폴더명, 파일명은 **케밥 케이스**, 소문자로 시작
 - 컴포넌트 파일명만 예외로 **PascalCase** 사용
+- `shared/ui/` 하위 컴포넌트에 `index.ts` 생성하지 않음
+- import 시 파일 직접 참조 (ex. `import Button from '@/shared/ui/Button/Button'`)
 
 ### 타입
 
@@ -208,7 +210,6 @@ const hasEmail = (email: string): boolean => { ... };
 // 색상 토큰 사용 예시
 <div className="bg-primary text-text">
 <p className="text-text-gray text-body font-sans">
-<h1 className="font-brand text-header1">
 ```
 
 ### 색상 토큰
