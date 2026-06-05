@@ -16,7 +16,7 @@ const Button = ({
   className = '',
 }: ButtonProps) => {
   const baseStyle =
-    'rounded-xl font-sans font-medium transition-colors duration-200';
+    'rounded-full font-sans font-medium transition-colors duration-200';
 
   const variantStyle = {
     primary: 'bg-primary text-white hover:bg-primary-dark',
