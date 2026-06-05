@@ -32,16 +32,16 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
           {
-            path: ROUTE_PATH.HOME,
+            path: ROUTE_PATH.TIMER,
             lazy: async () => {
-              const { default: Component } = await import('@/pages/home/HomePage');
+              const { default: Component } = await import('@/pages/timer/TimerPage');
               return { Component };
             },
           },
           {
-            path: ROUTE_PATH.TIMER,
+            path: ROUTE_PATH.PLANNER,
             lazy: async () => {
-              const { default: Component } = await import('@/pages/timer/TimerPage');
+              const { default: Component } = await import('@/pages/planner/PlannerPage');
               return { Component };
             },
           },
