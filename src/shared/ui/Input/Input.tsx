@@ -25,7 +25,7 @@ const Input = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="border-b border-border bg-transparent py-2 text-body font-sans text-text outline-none placeholder:text-text-gray focus:border-primary transition-colors duration-200"
+        className="h-11 w-full rounded-lg bg-bg px-4 text-body font-sans text-text outline-none placeholder:text-text-gray focus:outline-1 focus:outline-primary transition-all duration-200"
       />
     </div>
   );

@@ -3,8 +3,16 @@ import Button from '@/shared/ui/Button/Button';
 import useSignup from '../hooks/useSignup';
 
 const SignupForm = () => {
-  const { name, userId, password, isFormValid, setName, setUserId, setPassword, handleSubmit } =
-    useSignup();
+  const {
+    name,
+    userId,
+    password,
+    isFormValid,
+    setName,
+    setUserId,
+    setPassword,
+    handleSubmit,
+  } = useSignup();
 
   return (
     <section className="flex flex-col gap-6">
