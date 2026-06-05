@@ -17,7 +17,7 @@ const TodoItem = ({ id, label, isChecked, onToggle }: TodoItemProps) => {
       />
       <label
         htmlFor={id}
-        className={`flex-1 text-body font-sans cursor-pointer ${isChecked ? 'text-text-gray line-through' : 'text-text'}`}
+        className={`flex-1 text-body font-sans cursor-pointer ${isChecked ? 'text-text-gray' : 'text-text'}`}
       >
         {label}
       </label>
