@@ -20,21 +20,23 @@ const PlannerPage = () => {
 
   return (
     <>
-      <header className="relative flex items-center py-4">
+      <header className="pt-10">
         <img src={logoSmall} alt="Stumate" />
-        <h1 className="absolute left-1/2 -translate-x-1/2 font-sans text-header2 font-bold text-text">
-          플래너
-        </h1>
+        <div className="relative flex items-center justify-center py-4">
+          <h1 className="text-header2 text-text font-sans font-bold">플래너</h1>
+        </div>
       </header>
+
       <div className="flex flex-col gap-6 pb-8">
         {learningType && <AiLearningType learningType={learningType} />}
-        <FocusByTimeChart data={focusChartData} focusPeakLabel={focusPeakLabel} />
+        <FocusByTimeChart
+          data={focusChartData}
+          focusPeakLabel={focusPeakLabel}
+        />
         <PomodoroAnalysis data={pomodoroData} />
         <StudyAvgRate stats={studyStats} />
-        <div className="flex gap-4">
-          <LocationChart data={locationChartData} />
-          <SubjectFocusChart data={subjectChartData} />
-        </div>
+        <LocationChart data={locationChartData} />
+        <SubjectFocusChart data={subjectChartData} />
       </div>
     </>
   );

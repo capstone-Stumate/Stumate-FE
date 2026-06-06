@@ -40,6 +40,7 @@ const FocusByTimeChart = ({ data, focusPeakLabel }: FocusByTimeChartProps) => {
       <p className="mb-3 font-sans text-xs text-text-gray">
         — 집중도 피크: {focusPeakLabel} (이간 ↑)
       </p>
+      <div className="rounded-xl bg-bg p-3">
       <ResponsiveContainer width="100%" height={120}>
         <LineChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
           <XAxis
@@ -59,6 +60,7 @@ const FocusByTimeChart = ({ data, focusPeakLabel }: FocusByTimeChartProps) => {
           />
         </LineChart>
       </ResponsiveContainer>
+      </div>
     </section>
   );
 };

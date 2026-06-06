@@ -10,7 +10,7 @@ interface StatItemProps {
 }
 
 const StatItem = ({ label, value }: StatItemProps) => (
-  <div className="flex flex-1 flex-col items-center gap-1 rounded-xl bg-white px-2 py-3">
+  <div className="flex flex-1 flex-col items-center gap-1 rounded-xl bg-bg px-2 py-3">
     <span className="text-center font-sans text-[10px] text-text-gray">{label}</span>
     <span className="font-sans text-sm font-bold text-text">{value}</span>
   </div>

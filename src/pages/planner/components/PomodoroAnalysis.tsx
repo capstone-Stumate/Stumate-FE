@@ -13,7 +13,7 @@ const PomodoroAnalysis = ({ data }: PomodoroAnalysisProps) => {
           <span className="font-sans text-xs text-text-gray">평균 집중 유지</span>
           <span className="font-sans text-2xl font-bold text-text">{data.avgFocusMinutes}분</span>
         </div>
-        <div className="flex flex-1 flex-col items-center gap-1 rounded-xl bg-primary-light px-4 py-3">
+        <div className="flex flex-1 flex-col items-center gap-1 rounded-xl bg-bg px-4 py-3">
           <span className="font-sans text-xs text-text-gray">평균 일시정지</span>
           <span className="font-sans text-2xl font-bold text-text">{data.avgPauseCount}회</span>
         </div>
