@@ -3,7 +3,7 @@ export const LOCATIONS = [
   { id: 'school', label: '학교', shortLabel: '학교' },
   { id: 'cafe', label: '카페', shortLabel: '카페' },
   { id: 'home', label: '집', shortLabel: '집' },
-  { id: 'study-cafe', label: '스터디카페', shortLabel: '스터디' },
+  { id: 'study-cafe', label: '스터디카페', shortLabel: '스터디\n카페' },
   { id: 'etc', label: '기타 장소', shortLabel: '기타' },
 ] as const;
 
