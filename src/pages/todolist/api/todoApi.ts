@@ -1,19 +1,19 @@
-import instance from '@/shared/api/instance';
+// TODO: import instance from '@/shared/api/instance';
 import type { DayTodos } from '@/shared/types/todo';
 
-export const getTodos = async (date: string): Promise<DayTodos> => {
-  const response = await instance.get(`/todos?date=${date}`);
-  return response.data;
+export const getTodos = async (_date: string): Promise<DayTodos> => {
+  // TODO: const response = await instance.get(`/todos?date=${_date}`);
+  throw new Error('Not implemented');
 };
 
 export const toggleTodoComplete = async (
-  todoId: string,
-  isCompleted: boolean,
+  _todoId: string,
+  _isCompleted: boolean,
 ): Promise<void> => {
-  await instance.patch(`/todos/${todoId}`, { isCompleted });
+  // TODO: await instance.patch(`/todos/${_todoId}`, { isCompleted: _isCompleted });
 };
 
-export const getWeekStudyHours = async (startDate: string): Promise<number[]> => {
-  const response = await instance.get(`/study-hours?startDate=${startDate}`);
-  return response.data;
+export const getWeekStudyHours = async (_startDate: string): Promise<number[]> => {
+  // TODO: const response = await instance.get(`/study-hours?startDate=${_startDate}`);
+  throw new Error('Not implemented');
 };
