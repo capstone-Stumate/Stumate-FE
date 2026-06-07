@@ -3,9 +3,10 @@ interface TodoItemProps {
   label: string;
   isChecked: boolean;
   onToggle: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 
-const TodoItem = ({ id, label, isChecked, onToggle }: TodoItemProps) => {
+const TodoItem = ({ id, label, isChecked, onToggle, onDelete }: TodoItemProps) => {
   return (
     <li className="flex items-center gap-3 py-2">
       <input
@@ -21,6 +22,16 @@ const TodoItem = ({ id, label, isChecked, onToggle }: TodoItemProps) => {
       >
         {label}
       </label>
+      {onDelete && (
+        <button
+          type="button"
+          onClick={() => onDelete(id)}
+          className="text-text-gray hover:text-text"
+          aria-label="삭제"
+        >
+          ✕
+        </button>
+      )}
     </li>
   );
 };
