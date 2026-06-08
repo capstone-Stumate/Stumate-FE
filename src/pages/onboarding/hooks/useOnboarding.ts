@@ -1,6 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useUpdatePlanInfo } from '@/shared/api/generated/user-controller/user-controller';
+import useAuthStore from '@/shared/store/authStore';
+import { ROUTE_PATH } from '@/app/router/path';
 import type { LevelId } from '@/shared/constants/level';
 import type { DayId } from '@/shared/constants/subjects';
+import type { UpdatePlanInfoPlanLevel } from '@/shared/api/generated/stumateAPI.schemas';
 
 interface Schedule {
   id: string;
@@ -11,7 +16,11 @@ interface Schedule {
 }
 
 const useOnboarding = () => {
-  const [difficulty, setDifficulty] = useState<LevelId>('beginner');
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+
+  const [difficulty, setDifficulty] = useState<LevelId>('EASY');
   const [subjects, setSubjects] = useState<string[]>([]);
   const [subjectInput, setSubjectInput] = useState('');
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -19,6 +28,8 @@ const useOnboarding = () => {
   const [selectedDays, setSelectedDays] = useState<DayId[]>([]);
   const [startTime, setStartTime] = useState('08:00');
   const [endTime, setEndTime] = useState('12:00');
+
+  const { mutate: updatePlanMutate } = useUpdatePlanInfo();
 
   const handleAddSubject = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && subjectInput.trim() && subjects.length < 5) {
@@ -53,6 +64,19 @@ const useOnboarding = () => {
     setSchedules(schedules.filter((s) => s.id !== id));
   };
 
+  const handleComplete = () => {
+    if (!user) return;
+    updatePlanMutate(
+      { userId: user.userId, data: { planLevel: difficulty as UpdatePlanInfoPlanLevel } },
+      {
+        onSuccess: () => {
+          setUser({ ...user, planLevel: difficulty as UpdatePlanInfoPlanLevel });
+          navigate(ROUTE_PATH.TIMER);
+        },
+      },
+    );
+  };
+
   return {
     difficulty,
     setDifficulty,
@@ -72,6 +96,7 @@ const useOnboarding = () => {
     schedules,
     handleAddSchedule,
     handleDeleteSchedule,
+    handleComplete,
   };
 };
 

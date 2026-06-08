@@ -21,7 +21,7 @@ const MOCK_SCHEDULES: Schedule[] = [
 ];
 
 const useMypage = () => {
-  const [difficulty, setDifficulty] = useState<LevelId>('beginner');
+  const [difficulty, setDifficulty] = useState<LevelId>('EASY');
   const [subjects, setSubjects] = useState<string[]>(['수학', '영어', '과학']);
   const [subjectInput, setSubjectInput] = useState('');
   const [schedules, setSchedules] = useState<Schedule[]>(MOCK_SCHEDULES);

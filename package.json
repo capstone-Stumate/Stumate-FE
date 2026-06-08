@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate": "orval"
+    "generate": "orval && node -e \"const fs=require('fs'),path=require('path'),dir='src/shared/api/generated';function addNoCheck(d){fs.readdirSync(d).forEach(f=>{const p=path.join(d,f);if(fs.statSync(p).isDirectory())addNoCheck(p);else if(f.endsWith('.ts')){const c=fs.readFileSync(p,'utf8');if(!c.startsWith('// @ts-nocheck'))fs.writeFileSync(p,'// @ts-nocheck\\n'+c);}});}addNoCheck(dir);\""
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.0",
@@ -16,7 +16,8 @@
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.17.0",
-    "recharts": "^3.8.1"
+    "recharts": "^3.8.1",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

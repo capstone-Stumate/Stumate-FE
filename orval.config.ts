@@ -10,13 +10,11 @@ export default defineConfig({
       target: 'src/shared/api/generated',
       client: 'react-query',
       mode: 'tags-split',
-      headers: true,
       override: {
         mutator: {
           path: 'src/shared/api/instance.ts',
           name: 'customInstance',
         },
-        header: () => ['@ts-nocheck'],
       },
     },
   },

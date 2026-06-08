@@ -1,7 +1,6 @@
-import { useNavigate } from 'react-router-dom';
-import { ROUTE_PATH } from '@/app/router/path';
 import useOnboarding from './hooks/useOnboarding';
 import PlanLevel from './components/PlanLevel';
+
 import SubjectSelect from './components/SubjectSelect';
 import ScheduleInput from './components/ScheduleInput';
 import ScheduleList from './components/ScheduleList';
@@ -9,7 +8,6 @@ import Button from '@/shared/ui/Button/Button';
 import logoSmall from '@/assets/logo-small.svg';
 
 const OnboardingPage = () => {
-  const navigate = useNavigate();
   const {
     difficulty,
     setDifficulty,
@@ -29,6 +27,7 @@ const OnboardingPage = () => {
     schedules,
     handleAddSchedule,
     handleDeleteSchedule,
+    handleComplete,
   } = useOnboarding();
 
   return (
@@ -64,7 +63,7 @@ const OnboardingPage = () => {
         <ScheduleList schedules={schedules} onDelete={handleDeleteSchedule} />
       </div>
       <div className="mt-auto pt-8">
-        <Button label="완료" onClick={() => navigate(ROUTE_PATH.TIMER)} />
+        <Button label="완료" onClick={handleComplete} />
       </div>
     </>
   );
