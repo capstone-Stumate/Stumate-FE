@@ -1,5 +1,5 @@
 import logoSmall from '@/assets/logo-small.svg';
-import type { Info } from '@/shared/api/generated/stumateAPI.schemas';
+import type { TodoInfo, SubjectInfo, ScheduleInfo } from '@/shared/api/generated/stumateAPI.schemas';
 import { useGetMessage } from '@/shared/api/generated/motivational-message-controller/motivational-message-controller';
 import {
   useGetTodayTodos,
@@ -7,6 +7,8 @@ import {
   useCompleteTodo,
   useDeleteTodo,
 } from '@/shared/api/generated/todo-controller/todo-controller';
+import { useGetSubjects } from '@/shared/api/generated/user-subject-controller/user-subject-controller';
+import { useGetSchedules } from '@/shared/api/generated/fixed-schedule-controller/fixed-schedule-controller';
 import useAuthStore from '@/shared/store/authStore';
 import { getTodayString } from '@/shared/utils/formatDate';
 import useTimer from './hooks/useTimer';
@@ -14,6 +16,10 @@ import Timer from './components/Timer';
 import TimerSetupModal from './components/TimerSetupModal';
 import StudyCompleteModal from './components/StudyCompleteModal';
 import TimerTodoList from './components/TimerTodoList';
+
+const DAY_LABELS: Record<string, string> = {
+  MON: '월', TUE: '화', WED: '수', THU: '목', FRI: '금', SAT: '토', SUN: '일',
+};
 
 const TimerPage = () => {
   const {
@@ -42,13 +48,23 @@ const TimerPage = () => {
   const { data: todayTodosData, refetch: refetchTodos } = useGetTodayTodos(user?.userId ?? 0, {
     query: { enabled: !!user?.userId, placeholderData: (prev) => prev },
   });
-  const todayTodos = todayTodosData as unknown as Info[] | undefined;
+  const todayTodos = todayTodosData as unknown as TodoInfo[] | undefined;
+
+  const { data: subjectsData } = useGetSubjects(user?.userId ?? 0, {
+    query: { enabled: !!user?.userId },
+  });
+  const subjects = subjectsData as unknown as SubjectInfo[] | undefined;
+
+  const { data: schedulesData } = useGetSchedules(user?.userId ?? 0, {
+    query: { enabled: !!user?.userId },
+  });
+  const schedules = schedulesData as unknown as ScheduleInfo[] | undefined;
 
   const { mutate: createTodoMutate } = useCreateTodo();
   const { mutate: completeTodoMutate } = useCompleteTodo();
   const { mutate: deleteTodoMutate } = useDeleteTodo();
 
-  const todos = (todayTodos ?? []).map((info) => ({
+  const todos = (todayTodos ?? []).map((info: TodoInfo) => ({
     id: String(info.todoId),
     content: info.content ?? '',
     isCompleted: info.isCompleted ?? false,
@@ -156,11 +172,40 @@ const TimerPage = () => {
 
         {/* 투두 리스트 */}
         <TimerTodoList todos={todos} onToggle={handleToggleTodo} onAdd={handleAddTodo} onDelete={handleDeleteTodo} />
+
+        {/* 고정 일정 */}
+        {schedules && schedules.length > 0 && (
+          <section>
+            <h2 className="mb-3 font-sans text-body font-semibold text-text">고정 일정</h2>
+            <ul className="flex flex-col gap-2">
+              {schedules.map((schedule) => (
+                <li
+                  key={schedule.scheduleId}
+                  className="flex items-center justify-between rounded-xl bg-white px-4 py-3"
+                >
+                  <span className="font-sans text-body font-medium text-text">
+                    {schedule.scheduleName}
+                  </span>
+                  <span className="font-sans text-caption text-text-gray">
+                    {(schedule.days ?? []).map((d) => DAY_LABELS[d] ?? d).join(' ')}
+                    {schedule.startTime && schedule.endTime && (
+                      <> · {schedule.startTime}~{schedule.endTime}</>
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
 
       {/* 공부 설정 모달 */}
       {modalType === 'setup' && (
-        <TimerSetupModal onStart={handleSetupStart} onCancel={handleSetupCancel} />
+        <TimerSetupModal
+          subjects={subjects ?? []}
+          onStart={handleSetupStart}
+          onCancel={handleSetupCancel}
+        />
       )}
 
       {/* 공부 완료 모달 */}
