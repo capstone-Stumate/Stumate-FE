@@ -3,6 +3,7 @@ import logoSmall from '@/assets/logo-small.svg';
 import chevronLeft from '@/assets/chevron-left.svg';
 import BarChart from '@/shared/ui/BarChart/BarChart';
 import DateAccordion from './components/DateAccordion';
+import TodoInput from './components/TodoInput';
 import useTodolist from './hooks/useTodolist';
 
 const TodolistPage = () => {
@@ -11,9 +12,15 @@ const TodolistPage = () => {
     dayTodosList,
     openDates,
     studyHourData,
+    newTodoContent,
+    setNewTodoContent,
+    newTodoDate,
+    setNewTodoDate,
     isDateDisabled,
     handleToggleDate,
-    handleToggleTodo,
+    handleCompleteTodo,
+    handleDeleteTodo,
+    handleCreateTodo,
   } = useTodolist();
 
   return (
@@ -46,6 +53,14 @@ const TodolistPage = () => {
           />
         </section>
 
+        <TodoInput
+          content={newTodoContent}
+          date={newTodoDate}
+          onContentChange={setNewTodoContent}
+          onDateChange={setNewTodoDate}
+          onSubmit={handleCreateTodo}
+        />
+
         <section className="flex flex-col gap-2">
           {dayTodosList.map(({ date, todos }) => (
             <DateAccordion
@@ -55,7 +70,8 @@ const TodolistPage = () => {
               isOpen={openDates.has(date)}
               isDisabled={isDateDisabled(date, todos)}
               onToggle={() => handleToggleDate(date)}
-              onToggleTodo={(todoId) => handleToggleTodo(date, todoId)}
+              onCompleteTodo={handleCompleteTodo}
+              onDeleteTodo={handleDeleteTodo}
             />
           ))}
         </section>
