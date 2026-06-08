@@ -56,11 +56,24 @@ const usePlanner = () => {
       value: l.score ?? 0,
     };
   });
+  // Mock 데이터 (API 응답 없을 때 참고용)
+  // const locationChartData = LOCATIONS.map((loc, i) => ({
+  //   label: loc.shortLabel,
+  //   value: [8.5, 6.2, 7.8, 9.1, 7.0, 4.3][i] ?? 0,
+  // }));
 
   const subjectChartData = (planner?.subjectFocuses ?? []).map((s) => ({
     label: getShortLabel(s.subjectName),
     value: s.score ?? 0,
   }));
+  // Mock 데이터 (API 응답 없을 때 참고용)
+  // const subjectChartData = [
+  //   { label: '수', value: 9 },
+  //   { label: '국', value: 5 },
+  //   { label: '물', value: 3 },
+  //   { label: '영', value: 7 },
+  //   { label: '화', value: 2 },
+  // ];
 
   const pomodoroData = {
     avgFocusMinutes: planner?.pomodoroData?.avgFocusMinutes ?? 0,
@@ -84,6 +97,7 @@ const usePlanner = () => {
     studyStats,
     locationChartData,
     subjectChartData,
+    aiPlanner: planner?.aiPlanner ?? '',
   };
 };
 
