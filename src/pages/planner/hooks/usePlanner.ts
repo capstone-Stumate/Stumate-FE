@@ -35,8 +35,11 @@ const usePlanner = () => {
   const planner = plannerData as unknown as PlannerInfo | undefined;
 
   const learningType = AI_LEARNING_TYPES.find((t) => t.id === planner?.learningTypeId);
-  const mergedLearningType = learningType
-    ? { ...learningType, description: planner?.studyTypeDescription ?? learningType.description }
+  const mergedLearningType = planner
+    ? {
+        ...(learningType ?? { id: 'analyzing', emoji: '🔍', name: '분석 중' }),
+        description: planner.studyTypeDescription ?? learningType?.description ?? '',
+      }
     : undefined;
 
   const focusPeakLabel = planner
