@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Todo, DayTodos } from '@/shared/types/todo';
+import type { DailyGroup } from '@/shared/api/generated/stumateAPI.schemas';
 import { getWeekDates, getTodayString } from '@/shared/utils/formatDate';
 import {
   useGetWeeklyTodos,
@@ -20,17 +21,20 @@ const useTodolist = () => {
   const [newTodoContent, setNewTodoContent] = useState('');
   const [newTodoDate, setNewTodoDate] = useState(today);
 
-  const { data: weeklyTodosData, refetch } = useGetWeeklyTodos(user?.userId ?? 0, {
-    startDate: weekDates[0],
-    endDate: weekDates[6],
-  });
+  const { data: weeklyTodosData, refetch } = useGetWeeklyTodos(
+    user?.userId ?? 0,
+    { startDate: weekDates[0], endDate: weekDates[6] },
+    { query: { enabled: !!user?.userId } },
+  );
 
   const { mutate: createTodoMutate } = useCreateTodo();
   const { mutate: completeTodoMutate } = useCompleteTodo();
   const { mutate: deleteTodoMutate } = useDeleteTodo();
 
+  const weeklyTodos = weeklyTodosData as unknown as DailyGroup[] | undefined;
+
   const dayTodosList: DayTodos[] = weekDates.map((date) => {
-    const group = weeklyTodosData?.data.find((g) => g.todoDate === date);
+    const group = weeklyTodos?.find((g) => g.todoDate === date);
     const todos: Todo[] = (group?.todos ?? []).map((info) => ({
       id: String(info.todoId),
       content: info.content ?? '',
