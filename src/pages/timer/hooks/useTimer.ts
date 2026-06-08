@@ -1,5 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
 import type { TimerStatus, TimerModalType, TimerSession } from '@/shared/types/timer';
+import type { StartLocation } from '@/shared/api/generated/stumateAPI.schemas';
+import {
+  useStartSession,
+  useFinishSession,
+} from '@/shared/api/generated/study-session-controller/study-session-controller';
+import useAuthStore from '@/shared/store/authStore';
 
 const formatTime = (seconds: number): string => {
   const m = Math.floor(seconds / 60)
@@ -18,7 +24,14 @@ const formatTotalTime = (seconds: number): string => {
   return `${s}초`;
 };
 
+const toStartLocation = (label: string): StartLocation => {
+  const map: Record<string, StartLocation> = { '기타 장소': '기타' };
+  return (map[label] ?? label) as StartLocation;
+};
+
 const useTimer = () => {
+  const user = useAuthStore((state) => state.user);
+
   const [status, setStatus] = useState<TimerStatus>('idle');
   const [modalType, setModalType] = useState<TimerModalType>('none');
   const [sessionSeconds, setSessionSeconds] = useState(0);
@@ -28,6 +41,9 @@ const useTimer = () => {
   const [session, setSession] = useState<TimerSession | null>(null);
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const { mutate: startSessionMutate } = useStartSession();
+  const { mutate: finishSessionMutate } = useFinishSession();
 
   useEffect(() => {
     if (status === 'running') {
@@ -56,12 +72,29 @@ const useTimer = () => {
     setModalType('complete');
   };
 
-  const handleSetupStart = (subject: string, location: string) => {
-    setSession({ subject, location });
-    setSessionSeconds(0);
-    setPauseCount(0);
-    setStatus('running');
-    setModalType('none');
+  const handleSetupStart = (userSubjectId: number, subjectName: string, location: string) => {
+    if (!user) return;
+    startSessionMutate(
+      {
+        userId: user.userId,
+        data: { userSubjectId, location: toStartLocation(location) },
+      },
+      {
+        onSuccess: (data) => {
+          const sessionInfo = data as unknown as { sessionId?: number };
+          setSession({
+            sessionId: sessionInfo.sessionId ?? 0,
+            userSubjectId,
+            subject: subjectName,
+            location,
+          });
+          setSessionSeconds(0);
+          setPauseCount(0);
+          setStatus('running');
+          setModalType('none');
+        },
+      },
+    );
   };
 
   const handleSetupCancel = () => {
@@ -78,12 +111,30 @@ const useTimer = () => {
   };
 
   const handleCompleteSave = () => {
-    // TODO: API 연동 시 저장 요청
-    setModalType('none');
-    setSessionSeconds(0);
-    setRating(0);
-    setSession(null);
-    setPauseCount(0);
+    if (!user || !session?.sessionId) {
+      setModalType('none');
+      setSessionSeconds(0);
+      setRating(0);
+      setSession(null);
+      setPauseCount(0);
+      return;
+    }
+    finishSessionMutate(
+      {
+        userId: user.userId,
+        sessionId: session.sessionId,
+        data: { focusScore: rating, pauseCount },
+      },
+      {
+        onSuccess: () => {
+          setModalType('none');
+          setSessionSeconds(0);
+          setRating(0);
+          setSession(null);
+          setPauseCount(0);
+        },
+      },
+    );
   };
 
   return {

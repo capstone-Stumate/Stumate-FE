@@ -1,22 +1,22 @@
 import { useState } from 'react';
 import { LOCATIONS } from '@/shared/constants/locations';
+import type { SubjectInfo } from '@/shared/api/generated/stumateAPI.schemas';
 
 interface TimerSetupModalProps {
-  onStart: (subject: string, location: string) => void;
+  subjects: SubjectInfo[];
+  onStart: (userSubjectId: number, subjectName: string, location: string) => void;
   onCancel: () => void;
 }
 
-const MOCK_SUBJECTS = ['수학', '영어', '물리'];
-
-const TimerSetupModal = ({ onStart, onCancel }: TimerSetupModalProps) => {
-  const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
+const TimerSetupModal = ({ subjects, onStart, onCancel }: TimerSetupModalProps) => {
+  const [selectedSubject, setSelectedSubject] = useState<SubjectInfo | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
 
   const isValid = selectedSubject !== null && selectedLocation !== null;
 
   const handleStart = () => {
-    if (!isValid) return;
-    onStart(selectedSubject!, selectedLocation!);
+    if (!isValid || !selectedSubject?.userSubjectId) return;
+    onStart(selectedSubject.userSubjectId, selectedSubject.subjectName ?? '', selectedLocation!);
   };
 
   return (
@@ -36,20 +36,24 @@ const TimerSetupModal = ({ onStart, onCancel }: TimerSetupModalProps) => {
             과목
           </p>
           <div className="flex flex-wrap gap-2">
-            {MOCK_SUBJECTS.map((subject) => (
-              <button
-                key={subject}
-                type="button"
-                onClick={() => setSelectedSubject(subject)}
-                className={`text-body rounded-full px-4 py-1.5 font-sans font-medium ${
-                  selectedSubject === subject
-                    ? 'bg-primary text-text'
-                    : 'bg-bg text-text-gray'
-                }`}
-              >
-                {subject}
-              </button>
-            ))}
+            {subjects.length === 0 ? (
+              <p className="text-body text-text-gray font-sans">등록된 과목이 없습니다.</p>
+            ) : (
+              subjects.map((subject) => (
+                <button
+                  key={subject.userSubjectId}
+                  type="button"
+                  onClick={() => setSelectedSubject(subject)}
+                  className={`text-body rounded-full px-4 py-1.5 font-sans font-medium ${
+                    selectedSubject?.userSubjectId === subject.userSubjectId
+                      ? 'bg-primary text-text'
+                      : 'bg-bg text-text-gray'
+                  }`}
+                >
+                  {subject.subjectName}
+                </button>
+              ))
+            )}
           </div>
         </div>
 
