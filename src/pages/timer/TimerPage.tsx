@@ -2,14 +2,13 @@ import { useState } from 'react';
 import logoSmall from '@/assets/logo-small.svg';
 import type { Todo } from '@/shared/types/todo';
 import { useGetMessage } from '@/shared/api/generated/motivational-message-controller/motivational-message-controller';
+import useAuthStore from '@/shared/store/authStore';
 import useTimer from './hooks/useTimer';
 import Timer from './components/Timer';
 import TimerSetupModal from './components/TimerSetupModal';
 import StudyCompleteModal from './components/StudyCompleteModal';
 import TimerTodoList from './components/TimerTodoList';
 
-const MOCK_NAME = '학생';
-const MOCK_USER_ID = 1; // TODO: 인증 연동 시 실제 userId로 교체
 
 const INITIAL_TODOS: Todo[] = [
   { id: '1', subject: '물리', content: '모의고사 1', isCompleted: true },
@@ -37,7 +36,10 @@ const TimerPage = () => {
     handleCompleteSave,
   } = useTimer();
 
-  const { data: messageData, isLoading: isMessageLoading } = useGetMessage(MOCK_USER_ID);
+  const user = useAuthStore((state) => state.user);
+  const { data: messageData, isLoading: isMessageLoading } = useGetMessage(user?.userId ?? 0, {
+    query: { enabled: !!user?.userId },
+  });
   const motivationalMessage = isMessageLoading ? '로딩 중...' : String(messageData ?? '오늘도 화이팅!');
 
   const [todos, setTodos] = useState<Todo[]>(INITIAL_TODOS);
@@ -90,7 +92,7 @@ const TimerPage = () => {
           ) : (
             <>
               <p className="font-sans text-header2 font-bold text-text">
-                오늘도 화이팅, {MOCK_NAME} 님! 🌙
+                오늘도 화이팅, {user?.name ?? '학생'} 님! 🌙
               </p>
               <p className="mt-0.5 font-sans text-body text-text-gray">{motivationalMessage}</p>
             </>
