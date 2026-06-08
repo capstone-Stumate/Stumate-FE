@@ -1,75 +1,87 @@
 import { AI_LEARNING_TYPES } from '@/shared/constants/ai-learning-types';
 import { LOCATIONS } from '@/shared/constants/locations';
-import type { PlannerData } from '@/shared/types/ai';
+import type { PlannerInfo } from '@/shared/api/generated/stumateAPI.schemas';
+import { useGetPlanner } from '@/shared/api/generated/planner-controller/planner-controller';
+import useAuthStore from '@/shared/store/authStore';
 
-const MOCK_PLANNER_DATA: PlannerData = {
-  learningTypeId: 'night-owl',
-  focusPeakStart: 22,
-  focusPeakEnd: 24,
-  focusTimeData: [
-    { hour: 6, focusScore: 4.2 },
-    { hour: 9, focusScore: 6.1 },
-    { hour: 12, focusScore: 7.9 },
-    { hour: 15, focusScore: 6.5 },
-    { hour: 18, focusScore: 7.2 },
-    { hour: 21, focusScore: 8.4 },
-    { hour: 24, focusScore: 9.2 },
-  ],
-  pomodoroData: {
-    avgFocusMinutes: 28,
-    avgPauseCount: 1.8,
-    recommendFocusMinutes: 28,
-    recommendBreakMinutes: 7,
-  },
-  studyStats: {
-    todayStudyTime: '3h 45m',
-    totalStudyTime: '25:04:53',
-    completionRate: 80,
-    recommendCycleMinutes: 28,
-  },
-  locationEfficiencies: LOCATIONS.map((loc, i) => ({
-    locationId: loc.id,
-    label: loc.shortLabel,
-    score: [8.5, 6.2, 7.8, 9.1, 7.0, 4.3][i] ?? 0,
-  })),
-  subjectFocuses: [
-    { subject: '수학', shortLabel: '수', score: 9 },
-    { subject: '국어', shortLabel: '국', score: 5 },
-    { subject: '물리', shortLabel: '물', score: 3 },
-    { subject: '영어', shortLabel: '영', score: 7 },
-    { subject: '화학', shortLabel: '화', score: 2 },
-  ],
+const formatStudyTime = (seconds?: number): string => {
+  if (!seconds) return '0분';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}분`;
+};
+
+const formatTotalStudyTime = (seconds?: number): string => {
+  if (!seconds) return '00:00:00';
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = seconds % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+};
+
+const getShortLabel = (name?: string): string => {
+  if (!name) return '';
+  return name.length > 2 ? name.slice(0, 2) : name;
 };
 
 const usePlanner = () => {
-  const data = MOCK_PLANNER_DATA;
+  const user = useAuthStore((state) => state.user);
 
-  const learningType = AI_LEARNING_TYPES.find((t) => t.id === data.learningTypeId);
+  const { data: plannerData } = useGetPlanner(user?.userId ?? 0, {
+    query: { enabled: !!user?.userId },
+  });
 
-  const focusPeakLabel = `${data.focusPeakStart}~${data.focusPeakEnd}시`;
+  const planner = plannerData as unknown as PlannerInfo | undefined;
 
-  const focusChartData = data.focusTimeData.map((d) => ({
+  const learningType = AI_LEARNING_TYPES.find((t) => t.id === planner?.learningTypeId);
+  const mergedLearningType = learningType
+    ? { ...learningType, description: planner?.studyTypeDescription ?? learningType.description }
+    : undefined;
+
+  const focusPeakLabel = planner
+    ? `${planner.focusPeakStart}~${planner.focusPeakEnd}시`
+    : '';
+
+  const focusChartData = (planner?.focusTimeData ?? []).map((d) => ({
     label: `${d.hour}시`,
-    hour: d.hour,
-    focusScore: d.focusScore,
+    hour: d.hour ?? 0,
+    focusScore: d.focusScore ?? 0,
   }));
 
-  const locationChartData = data.locationEfficiencies.map((l) => ({
-    label: l.label,
-    value: l.score,
+  const locationChartData = (planner?.locationEfficiencies ?? []).map((l) => {
+    const location = LOCATIONS.find((loc) => loc.id === l.locationId);
+    return {
+      label: location?.shortLabel ?? l.locationId ?? '',
+      value: l.score ?? 0,
+    };
+  });
+
+  const subjectChartData = (planner?.subjectFocuses ?? []).map((s) => ({
+    label: getShortLabel(s.subjectName),
+    value: s.score ?? 0,
   }));
 
-  const subjectChartData = data.subjectFocuses.map((s) => ({
-    label: s.shortLabel,
-    value: s.score,
-  }));
+  const pomodoroData = {
+    avgFocusMinutes: planner?.pomodoroData?.avgFocusMinutes ?? 0,
+    avgPauseCount: planner?.pomodoroData?.avgPauseCount ?? 0,
+    recommendFocusMinutes: planner?.pomodoroData?.recommendFocusMinutes ?? 0,
+    recommendBreakMinutes: planner?.pomodoroData?.recommendBreakMinutes ?? 0,
+  };
+
+  const studyStats = {
+    todayStudyTime: formatStudyTime(planner?.studyStats?.todayStudyTime),
+    totalStudyTime: formatTotalStudyTime(planner?.studyStats?.totalStudyTime),
+    completionRate: planner?.studyStats?.completionRate ?? 0,
+    recommendCycleMinutes: planner?.pomodoroData?.recommendFocusMinutes ?? 0,
+  };
 
   return {
-    learningType,
+    learningType: mergedLearningType,
     focusPeakLabel,
     focusChartData,
-    pomodoroData: data.pomodoroData,
-    studyStats: data.studyStats,
+    pomodoroData,
+    studyStats,
     locationChartData,
     subjectChartData,
   };
