@@ -16,6 +16,7 @@ const PlannerPage = () => {
     studyStats,
     locationChartData,
     subjectChartData,
+    aiPlanner,
   } = usePlanner();
 
   return (
@@ -35,6 +36,14 @@ const PlannerPage = () => {
         />
         <PomodoroAnalysis data={pomodoroData} />
         <StudyAvgRate stats={studyStats} />
+        {aiPlanner && (
+          <section>
+            <h2 className="mb-3 font-sans text-body font-semibold text-text">AI 플래너</h2>
+            <div className="rounded-xl bg-bg p-4">
+              <p className="whitespace-pre-line font-sans text-body text-text-gray">{aiPlanner}</p>
+            </div>
+          </section>
+        )}
         <LocationChart data={locationChartData} />
         <SubjectFocusChart data={subjectChartData} />
       </div>
