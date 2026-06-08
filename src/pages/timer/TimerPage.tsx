@@ -40,7 +40,7 @@ const TimerPage = () => {
   const motivationalMessage = isMessageLoading ? '로딩 중...' : String(messageData ?? '오늘도 화이팅!');
 
   const { data: todayTodosData, refetch: refetchTodos } = useGetTodayTodos(user?.userId ?? 0, {
-    query: { enabled: !!user?.userId },
+    query: { enabled: !!user?.userId, placeholderData: (prev) => prev },
   });
   const todayTodos = todayTodosData as unknown as Info[] | undefined;
 

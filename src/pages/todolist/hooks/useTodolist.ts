@@ -4,7 +4,6 @@ import type { DailyGroup } from '@/shared/api/generated/stumateAPI.schemas';
 import { getWeekDates, getTodayString } from '@/shared/utils/formatDate';
 import {
   useGetWeeklyTodos,
-  useCreateTodo,
   useCompleteTodo,
   useDeleteTodo,
 } from '@/shared/api/generated/todo-controller/todo-controller';
@@ -18,8 +17,6 @@ const useTodolist = () => {
   const today = getTodayString();
 
   const [openDates, setOpenDates] = useState<Set<string>>(new Set());
-  const [newTodoContent, setNewTodoContent] = useState('');
-  const [newTodoDate, setNewTodoDate] = useState(today);
 
   const { data: weeklyTodosData, refetch } = useGetWeeklyTodos(
     user?.userId ?? 0,
@@ -27,7 +24,6 @@ const useTodolist = () => {
     { query: { enabled: !!user?.userId } },
   );
 
-  const { mutate: createTodoMutate } = useCreateTodo();
   const { mutate: completeTodoMutate } = useCompleteTodo();
   const { mutate: deleteTodoMutate } = useDeleteTodo();
 
@@ -80,32 +76,14 @@ const useTodolist = () => {
     );
   };
 
-  const handleCreateTodo = () => {
-    if (!user || !newTodoContent.trim()) return;
-    createTodoMutate(
-      { userId: user.userId, data: { content: newTodoContent.trim(), todoDate: newTodoDate } },
-      {
-        onSuccess: () => {
-          setNewTodoContent('');
-          refetch();
-        },
-      },
-    );
-  };
-
   return {
     dayTodosList,
     openDates,
     studyHourData,
-    newTodoContent,
-    setNewTodoContent,
-    newTodoDate,
-    setNewTodoDate,
     isDateDisabled,
     handleToggleDate,
     handleCompleteTodo,
     handleDeleteTodo,
-    handleCreateTodo,
   };
 };
 
