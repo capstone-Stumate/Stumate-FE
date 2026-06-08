@@ -13,7 +13,8 @@ const TodolistPage = () => {
     studyHourData,
     isDateDisabled,
     handleToggleDate,
-    handleToggleTodo,
+    handleCompleteTodo,
+    handleDeleteTodo,
   } = useTodolist();
 
   return (
@@ -55,7 +56,8 @@ const TodolistPage = () => {
               isOpen={openDates.has(date)}
               isDisabled={isDateDisabled(date, todos)}
               onToggle={() => handleToggleDate(date)}
-              onToggleTodo={(todoId) => handleToggleTodo(date, todoId)}
+              onCompleteTodo={handleCompleteTodo}
+              onDeleteTodo={handleDeleteTodo}
             />
           ))}
         </section>

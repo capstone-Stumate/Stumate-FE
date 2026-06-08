@@ -10,7 +10,8 @@ interface DateAccordionProps {
   isOpen: boolean;
   isDisabled: boolean;
   onToggle: () => void;
-  onToggleTodo: (todoId: string) => void;
+  onCompleteTodo: (todoId: string) => void;
+  onDeleteTodo: (todoId: string) => void;
 }
 
 const DateAccordion = ({
@@ -19,7 +20,8 @@ const DateAccordion = ({
   isOpen,
   isDisabled,
   onToggle,
-  onToggleTodo,
+  onCompleteTodo,
+  onDeleteTodo,
 }: DateAccordionProps) => {
   const dateLabel = formatDateLabel(date);
   const dayLabel = getDayLabel(date);
@@ -56,9 +58,10 @@ const DateAccordion = ({
             <TodoItem
               key={todo.id}
               id={todo.id}
-              label={`[${todo.subject}] ${todo.content}`}
+              label={todo.content}
               isChecked={todo.isCompleted}
-              onToggle={() => onToggleTodo(todo.id)}
+              onToggle={() => onCompleteTodo(todo.id)}
+              onDelete={() => onDeleteTodo(todo.id)}
             />
           ))}
         </ul>

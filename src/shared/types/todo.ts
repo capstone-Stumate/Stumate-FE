@@ -1,6 +1,5 @@
 export interface Todo {
   id: string;
-  subject: string;
   content: string;
   isCompleted: boolean;
 }

@@ -1,22 +1,19 @@
-import { useState } from 'react';
 import logoSmall from '@/assets/logo-small.svg';
-import type { Todo } from '@/shared/types/todo';
+import type { Info } from '@/shared/api/generated/stumateAPI.schemas';
 import { useGetMessage } from '@/shared/api/generated/motivational-message-controller/motivational-message-controller';
+import {
+  useGetTodayTodos,
+  useCreateTodo,
+  useCompleteTodo,
+  useDeleteTodo,
+} from '@/shared/api/generated/todo-controller/todo-controller';
 import useAuthStore from '@/shared/store/authStore';
+import { getTodayString } from '@/shared/utils/formatDate';
 import useTimer from './hooks/useTimer';
 import Timer from './components/Timer';
 import TimerSetupModal from './components/TimerSetupModal';
 import StudyCompleteModal from './components/StudyCompleteModal';
 import TimerTodoList from './components/TimerTodoList';
-
-
-const INITIAL_TODOS: Todo[] = [
-  { id: '1', subject: '물리', content: '모의고사 1', isCompleted: true },
-  { id: '2', subject: '물리', content: '모의고사 2', isCompleted: true },
-  { id: '3', subject: '토플', content: '모의고사 1', isCompleted: false },
-  { id: '4', subject: '토플', content: '모의고사 2', isCompleted: false },
-  { id: '5', subject: '도형', content: '모의고사 2', isCompleted: false },
-];
 
 const TimerPage = () => {
   const {
@@ -42,25 +39,45 @@ const TimerPage = () => {
   });
   const motivationalMessage = isMessageLoading ? '로딩 중...' : String(messageData ?? '오늘도 화이팅!');
 
-  const [todos, setTodos] = useState<Todo[]>(INITIAL_TODOS);
+  const { data: todayTodosData, refetch: refetchTodos } = useGetTodayTodos(user?.userId ?? 0, {
+    query: { enabled: !!user?.userId, placeholderData: (prev) => prev },
+  });
+  const todayTodos = todayTodosData as unknown as Info[] | undefined;
+
+  const { mutate: createTodoMutate } = useCreateTodo();
+  const { mutate: completeTodoMutate } = useCompleteTodo();
+  const { mutate: deleteTodoMutate } = useDeleteTodo();
+
+  const todos = (todayTodos ?? []).map((info) => ({
+    id: String(info.todoId),
+    content: info.content ?? '',
+    isCompleted: info.isCompleted ?? false,
+  }));
 
   const isActive = status !== 'idle';
 
   const handleToggleTodo = (id: string) => {
-    setTodos((prev) =>
-      prev.map((todo) => (todo.id === id ? { ...todo, isCompleted: !todo.isCompleted } : todo)),
+    if (!user) return;
+    completeTodoMutate(
+      { userId: user.userId, todoId: Number(id) },
+      { onSuccess: () => refetchTodos() },
     );
   };
 
   const handleAddTodo = (content: string) => {
-    setTodos((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), subject: '', content, isCompleted: false },
-    ]);
+    if (!user) return;
+    createTodoMutate(
+      { userId: user.userId, data: { content, todoDate: getTodayString() } },
+      { onSuccess: () => refetchTodos() },
+    );
   };
 
   const handleDeleteTodo = (id: string) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    if (!user) return;
+    deleteTodoMutate(
+      { userId: user.userId, todoId: Number(id) },
+      { onSuccess: () => refetchTodos() },
+    );
   };
 
   return (
