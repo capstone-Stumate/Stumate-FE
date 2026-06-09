@@ -7,7 +7,7 @@ import useAuthStore from '@/shared/store/authStore';
 import { ROUTE_PATH } from '@/app/router/path';
 import type { LevelId } from '@/shared/constants/level';
 import type { DayId } from '@/shared/constants/subjects';
-import type { UpdatePlanInfoPlanLevel, ScheduleCreateDaysItem } from '@/shared/api/generated/stumateAPI.schemas';
+import type { UpdatePlanInfoPlanLevel } from '@/shared/api/generated/stumateAPI.schemas';
 
 interface Schedule {
   id: string;
@@ -77,7 +77,7 @@ const useOnboarding = () => {
       schedules.map((s) =>
         createSchedule(user.userId, {
           scheduleName: s.name,
-          days: s.days.map((d) => d.toUpperCase() as ScheduleCreateDaysItem),
+          days: s.days,
           startTime: s.startTime,
           endTime: s.endTime,
         }),

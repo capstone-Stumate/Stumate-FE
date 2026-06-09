@@ -16,8 +16,8 @@ const MOCK_USER = {
 };
 
 const MOCK_SCHEDULES: Schedule[] = [
-  { id: '1', name: '오전 공부', days: ['mon', 'wed', 'fri'], startTime: '09:00', endTime: '12:00' },
-  { id: '2', name: '저녁 복습', days: ['tue', 'thu'], startTime: '19:00', endTime: '21:00' },
+  { id: '1', name: '오전 공부', days: ['MON', 'WED', 'FRI'], startTime: '09:00', endTime: '12:00' },
+  { id: '2', name: '저녁 복습', days: ['TUE', 'THU'], startTime: '19:00', endTime: '21:00' },
 ];
 
 const useMypage = () => {
