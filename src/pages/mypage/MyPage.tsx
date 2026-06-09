@@ -66,7 +66,13 @@ const MyPage = () => {
           </div>
         </section>
 
-        <PlanLevel value={difficulty} onChange={setDifficulty} />
+        <PlanLevel
+          value={difficulty}
+          onChange={setDifficulty}
+          action={
+            <Button label="변경 상태 저장" onClick={handleSave} size="sm" />
+          }
+        />
 
         <SubjectSelect
           subjects={subjects}
@@ -87,9 +93,6 @@ const MyPage = () => {
           onAdd={handleAddSchedule}
         />
         <ScheduleList schedules={schedules} onDelete={handleDeleteSchedule} />
-      </div>
-      <div className="mt-auto pt-8 pb-8">
-        <Button label="저장" onClick={handleSave} />
       </div>
     </>
   );

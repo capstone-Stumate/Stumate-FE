@@ -1,14 +1,19 @@
+import type React from 'react';
 import { LEVEL, type LevelId } from '@/shared/constants/level';
 
 interface PlanLevelProps {
   value: LevelId;
   onChange: (value: LevelId) => void;
+  action?: React.ReactNode;
 }
 
-const PlanLevel = ({ value, onChange }: PlanLevelProps) => {
+const PlanLevel = ({ value, onChange, action }: PlanLevelProps) => {
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-body font-sans font-bold text-text">플랜 난이도</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-body font-sans font-bold text-text">플랜 난이도</h2>
+        {action}
+      </div>
       <div className="flex gap-2">
         {LEVEL.map(({ id, label, description }) => (
           <button
