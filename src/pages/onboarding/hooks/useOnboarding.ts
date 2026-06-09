@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUpdatePlanInfo } from '@/shared/api/generated/user-controller/user-controller';
+import { addSubject } from '@/shared/api/generated/user-subject-controller/user-subject-controller';
+import { createSchedule } from '@/shared/api/generated/fixed-schedule-controller/fixed-schedule-controller';
 import useAuthStore from '@/shared/store/authStore';
 import { ROUTE_PATH } from '@/app/router/path';
 import type { LevelId } from '@/shared/constants/level';
 import type { DayId } from '@/shared/constants/subjects';
-import type { UpdatePlanInfoPlanLevel } from '@/shared/api/generated/stumateAPI.schemas';
+import type { UpdatePlanInfoPlanLevel, ScheduleCreateDaysItem } from '@/shared/api/generated/stumateAPI.schemas';
 
 interface Schedule {
   id: string;
@@ -64,8 +66,24 @@ const useOnboarding = () => {
     setSchedules(schedules.filter((s) => s.id !== id));
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
     if (!user) return;
+
+    await Promise.all(
+      subjects.map((name) => addSubject(user.userId, { subjectName: name })),
+    );
+
+    await Promise.all(
+      schedules.map((s) =>
+        createSchedule(user.userId, {
+          scheduleName: s.name,
+          days: s.days.map((d) => d.toUpperCase() as ScheduleCreateDaysItem),
+          startTime: s.startTime,
+          endTime: s.endTime,
+        }),
+      ),
+    );
+
     updatePlanMutate(
       { userId: user.userId, data: { planLevel: difficulty as UpdatePlanInfoPlanLevel } },
       {

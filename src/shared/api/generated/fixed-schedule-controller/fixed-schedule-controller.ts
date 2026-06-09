@@ -25,7 +25,7 @@ import type {
 } from '@tanstack/react-query';
 
 import type {
-  Create,
+  ScheduleCreate,
   ScheduleInfo
 } from '../stumateAPI.schemas';
 
@@ -143,7 +143,7 @@ export function useGetSchedules<TData = Awaited<ReturnType<typeof getSchedules>>
 
 
 export type createScheduleResponse200 = {
-  data: ScheduleInfo
+  data: ScheduleInfo[]
   status: 200
 }
 
@@ -163,14 +163,14 @@ export const getCreateScheduleUrl = (userId: number,) => {
 }
 
 export const createSchedule = async (userId: number,
-    create: Create, options?: RequestInit): Promise<createScheduleResponse> => {
+    scheduleCreate: ScheduleCreate, options?: RequestInit): Promise<createScheduleResponse> => {
 
   return customInstance<createScheduleResponse>(getCreateScheduleUrl(userId),
   {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
-    body: JSON.stringify(create)
+    body: JSON.stringify(scheduleCreate)
   }
 );}
 
@@ -178,8 +178,8 @@ export const createSchedule = async (userId: number,
 
 
 export const getCreateScheduleMutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSchedule>>, TError,{userId: number;data: Create}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof createSchedule>>, TError,{userId: number;data: Create}, TContext> => {
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSchedule>>, TError,{userId: number;data: ScheduleCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof createSchedule>>, TError,{userId: number;data: ScheduleCreate}, TContext> => {
 
 const mutationKey = ['createSchedule'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
@@ -191,7 +191,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSchedule>>, {userId: number;data: Create}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createSchedule>>, {userId: number;data: ScheduleCreate}> = (props) => {
           const {userId,data} = props ?? {};
 
           return  createSchedule(userId,data,requestOptions)
@@ -205,15 +205,15 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
   return  { mutationFn, ...mutationOptions }}
 
     export type CreateScheduleMutationResult = NonNullable<Awaited<ReturnType<typeof createSchedule>>>
-    export type CreateScheduleMutationBody = Create
+    export type CreateScheduleMutationBody = ScheduleCreate
     export type CreateScheduleMutationError = unknown
 
     export const useCreateSchedule = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSchedule>>, TError,{userId: number;data: Create}, TContext>, request?: SecondParameter<typeof customInstance>}
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createSchedule>>, TError,{userId: number;data: ScheduleCreate}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof createSchedule>>,
         TError,
-        {userId: number;data: Create},
+        {userId: number;data: ScheduleCreate},
         TContext
       > => {
       return useMutation(getCreateScheduleMutationOptions(options), queryClient);
