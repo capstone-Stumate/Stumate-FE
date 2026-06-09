@@ -1,44 +1,69 @@
 import { useState } from 'react';
+import { useGetSubjects, useAddSubject, useDeleteSubject } from '@/shared/api/generated/user-subject-controller/user-subject-controller';
+import { useGetSchedules, useCreateSchedule, useDeleteSchedule } from '@/shared/api/generated/fixed-schedule-controller/fixed-schedule-controller';
+import { useUpdatePlanInfo } from '@/shared/api/generated/user-controller/user-controller';
+import type { SubjectInfo, ScheduleInfo, UpdatePlanInfoPlanLevel } from '@/shared/api/generated/stumateAPI.schemas';
+import useAuthStore from '@/shared/store/authStore';
 import type { LevelId } from '@/shared/constants/level';
 import type { DayId } from '@/shared/constants/subjects';
 
-interface Schedule {
-  id: string;
-  name: string;
-  days: DayId[];
-  startTime: string;
-  endTime: string;
-}
-
-const MOCK_USER = {
-  name: '학생',
-  email: 'student@stumate.io',
-};
-
-const MOCK_SCHEDULES: Schedule[] = [
-  { id: '1', name: '오전 공부', days: ['MON', 'WED', 'FRI'], startTime: '09:00', endTime: '12:00' },
-  { id: '2', name: '저녁 복습', days: ['TUE', 'THU'], startTime: '19:00', endTime: '21:00' },
-];
-
 const useMypage = () => {
-  const [difficulty, setDifficulty] = useState<LevelId>('EASY');
-  const [subjects, setSubjects] = useState<string[]>(['수학', '영어', '과학']);
+  const user = useAuthStore((state) => state.user);
+  const setUser = useAuthStore((state) => state.setUser);
+
+  const [difficulty, setDifficulty] = useState<LevelId>((user?.planLevel as LevelId) ?? 'EASY');
   const [subjectInput, setSubjectInput] = useState('');
-  const [schedules, setSchedules] = useState<Schedule[]>(MOCK_SCHEDULES);
   const [scheduleName, setScheduleName] = useState('');
   const [selectedDays, setSelectedDays] = useState<DayId[]>([]);
   const [startTime, setStartTime] = useState('08:00');
   const [endTime, setEndTime] = useState('12:00');
 
+  const { data: subjectsData, refetch: refetchSubjects } = useGetSubjects(user?.userId ?? 0, {
+    query: { enabled: !!user?.userId },
+  });
+  const subjectInfos = subjectsData as unknown as SubjectInfo[] | undefined;
+  const subjects = (subjectInfos ?? []).map((s) => s.subjectName ?? '');
+
+  const { data: schedulesData, refetch: refetchSchedules } = useGetSchedules(user?.userId ?? 0, {
+    query: { enabled: !!user?.userId },
+  });
+  const scheduleInfos = schedulesData as unknown as ScheduleInfo[] | undefined;
+  const schedules = (scheduleInfos ?? []).map((s) => ({
+    id: String(s.scheduleId),
+    name: s.scheduleName ?? '',
+    days: (s.days ?? []) as DayId[],
+    startTime: s.startTime ?? '',
+    endTime: s.endTime ?? '',
+  }));
+
+  const { mutate: addSubjectMutate } = useAddSubject();
+  const { mutate: deleteSubjectMutate } = useDeleteSubject();
+  const { mutate: createScheduleMutate } = useCreateSchedule();
+  const { mutate: deleteScheduleMutate } = useDeleteSchedule();
+  const { mutate: updatePlanMutate } = useUpdatePlanInfo();
+
   const handleAddSubject = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && subjectInput.trim() && subjects.length < 5) {
-      setSubjects([...subjects, subjectInput.trim()]);
-      setSubjectInput('');
-    }
+    if (e.key !== 'Enter' || !subjectInput.trim() || (subjectInfos?.length ?? 0) >= 5) return;
+    if (!user) return;
+    addSubjectMutate(
+      { userId: user.userId, data: { subjectName: subjectInput.trim() } },
+      {
+        onSuccess: () => {
+          refetchSubjects();
+          setSubjectInput('');
+        },
+      },
+    );
   };
 
   const handleDeleteSubject = (index: number) => {
-    setSubjects(subjects.filter((_, i) => i !== index));
+    if (!user || !subjectInfos) return;
+    const subject = subjectInfos[index];
+    if (!subject?.userSubjectId) return;
+    deleteSubjectMutate(
+      { userId: user.userId, userSubjectId: subject.userSubjectId },
+      { onSuccess: () => refetchSubjects() },
+    );
   };
 
   const handleToggleDay = (day: DayId) => {
@@ -48,29 +73,46 @@ const useMypage = () => {
   };
 
   const handleAddSchedule = () => {
-    if (selectedDays.length === 0 || !scheduleName.trim()) return;
-    setSchedules([
-      ...schedules,
+    if (selectedDays.length === 0 || !scheduleName.trim() || !user) return;
+    createScheduleMutate(
       {
-        id: crypto.randomUUID(),
-        name: scheduleName.trim(),
-        days: selectedDays,
-        startTime,
-        endTime,
+        userId: user.userId,
+        data: { scheduleName: scheduleName.trim(), days: selectedDays, startTime, endTime },
       },
-    ]);
-    setScheduleName('');
-    setSelectedDays([]);
-    setStartTime('08:00');
-    setEndTime('12:00');
+      {
+        onSuccess: () => {
+          refetchSchedules();
+          setScheduleName('');
+          setSelectedDays([]);
+          setStartTime('08:00');
+          setEndTime('12:00');
+        },
+      },
+    );
   };
 
   const handleDeleteSchedule = (id: string) => {
-    setSchedules(schedules.filter((s) => s.id !== id));
+    if (!user) return;
+    deleteScheduleMutate(
+      { userId: user.userId, scheduleId: Number(id) },
+      { onSuccess: () => refetchSchedules() },
+    );
+  };
+
+  const handleSave = () => {
+    if (!user) return;
+    updatePlanMutate(
+      { userId: user.userId, data: { planLevel: difficulty as UpdatePlanInfoPlanLevel } },
+      {
+        onSuccess: () => {
+          setUser({ ...user, planLevel: difficulty as UpdatePlanInfoPlanLevel });
+        },
+      },
+    );
   };
 
   return {
-    user: MOCK_USER,
+    user: { name: user?.name ?? '', username: user?.username ?? '' },
     difficulty,
     setDifficulty,
     subjects,
@@ -89,6 +131,7 @@ const useMypage = () => {
     schedules,
     handleAddSchedule,
     handleDeleteSchedule,
+    handleSave,
   };
 };
 
