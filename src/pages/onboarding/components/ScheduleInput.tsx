@@ -31,7 +31,7 @@ const ScheduleInput = ({
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-body font-sans font-bold text-text">공부 일정</h2>
+      <h2 className="text-body text-text font-sans font-bold">고정 일정</h2>
       <div className="flex justify-between">
         {DAYS.map(({ id, label }) => (
           <DayChip
@@ -53,11 +53,7 @@ const ScheduleInput = ({
         onStartChange={onStartChange}
         onEndChange={onEndChange}
       />
-      <Button
-        label="+ 일정 추가"
-        onClick={onAdd}
-        isActive={isValid}
-      />
+      <Button label="+ 일정 추가" onClick={onAdd} isActive={isValid} />
     </section>
   );
 };
