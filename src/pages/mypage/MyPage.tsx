@@ -7,6 +7,7 @@ import SubjectSelect from '@/pages/onboarding/components/SubjectSelect';
 import ScheduleInput from '@/pages/onboarding/components/ScheduleInput';
 import ScheduleList from '@/pages/onboarding/components/ScheduleList';
 import navPolygon from '@/assets/nav-polygon.svg';
+import Button from '@/shared/ui/Button/Button';
 
 const MyPage = () => {
   const navigate = useNavigate();
@@ -30,6 +31,7 @@ const MyPage = () => {
     schedules,
     handleAddSchedule,
     handleDeleteSchedule,
+    handleSave,
   } = useMypage();
 
   return (
@@ -49,7 +51,7 @@ const MyPage = () => {
             {user.name}
           </span>
           <span className="text-body text-text-gray font-sans">
-            {user.email}
+            {user.username}
           </span>
 
           <div className="mb-2 flex items-center gap-1">
@@ -85,6 +87,9 @@ const MyPage = () => {
           onAdd={handleAddSchedule}
         />
         <ScheduleList schedules={schedules} onDelete={handleDeleteSchedule} />
+      </div>
+      <div className="mt-auto pt-8 pb-8">
+        <Button label="저장" onClick={handleSave} />
       </div>
     </>
   );
