@@ -70,6 +70,27 @@ export interface SessionInfo {
   pauseCount?: number;
 }
 
+export type ScheduleCreateDaysItem = typeof ScheduleCreateDaysItem[keyof typeof ScheduleCreateDaysItem];
+
+
+export const ScheduleCreateDaysItem = {
+  MON: 'MON',
+  TUE: 'TUE',
+  WED: 'WED',
+  THU: 'THU',
+  FRI: 'FRI',
+  SAT: 'SAT',
+  SUN: 'SUN',
+} as const;
+
+export interface ScheduleCreate {
+  /** @minLength 1 */
+  scheduleName?: string;
+  days: ScheduleCreateDaysItem[];
+  startTime: string;
+  endTime: string;
+}
+
 export type ScheduleInfoDaysItem = typeof ScheduleInfoDaysItem[keyof typeof ScheduleInfoDaysItem];
 
 
